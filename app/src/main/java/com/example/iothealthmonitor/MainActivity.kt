@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.iothealthmonitor.data.model.HealthData
 import com.example.iothealthmonitor.data.repository.MockHealthRepository
+import com.example.iothealthmonitor.data.repository.MqttHealthRepository
 import com.example.iothealthmonitor.ui.viewmodel.HealthViewModel
 import com.example.iothealthmonitor.ui.viewmodel.HealthViewModelFactory
 import com.github.mikephil.charting.charts.LineChart
@@ -22,10 +23,14 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     // 1. get ViewModel (using Factory)
+//    private val viewModel: HealthViewModel by viewModels {
+//        HealthViewModelFactory(MockHealthRepository())
+//    }
+    // ✅ [检查点 1] viewModel 必须定义在这里（类成员变量），不能在 onCreate 里面！
     private val viewModel: HealthViewModel by viewModels {
-        HealthViewModelFactory(MockHealthRepository())
+        // 注意：这里需要传入 Repository 实例，现在你用的是 MqttHealthRepository
+        HealthViewModelFactory(MqttHealthRepository())
     }
-
     // UI components
     private lateinit var chartHr: LineChart
     private lateinit var chartSpo2: LineChart
